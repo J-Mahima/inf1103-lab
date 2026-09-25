@@ -1,11 +1,19 @@
-with open("persistent_auditor.py", "r") as file:
-    data = file.read()
-print(data)
-
 inventory = 0
 # inventory is the total number of units processed
 error = 0
 # stock is the new stock quantity input by the user
+
+
+def load_inventory():
+    try:
+        open("inventory.txt", "a").close()
+        with open("inventory.txt", "r") as file:
+            data = file.read()
+            print(data)
+    
+    except:
+        print("Error: Unable to load inventory data.")
+
 
 def get_valid_input():
     stock = input("Enter a stock quantity: ")
@@ -36,6 +44,7 @@ def calculate_tax(stock):
 def generate_report(inventory, error):
     print("Total Units Processed: ", inventory)
     print("Number of Failed Entries: ", error)
+
 
 
 while True:
