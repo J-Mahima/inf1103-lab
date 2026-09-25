@@ -1,16 +1,9 @@
-inventory = 0
-# inventory is the total number of units processed
-error = 0
-# stock is the new stock quantity input by the user
-
-
 def load_inventory():
     inventory_list = []
     try:
         with open("inventory.txt", "r") as file:
             for every_item in file:
                 inventory_list.append(int(every_item.strip()))
-            inventory = sum(inventory_list)
             print(inventory)
             return inventory
             
@@ -19,12 +12,10 @@ def load_inventory():
         return []
 
 
-def save_inventory(item_number, item_name, item_quantity):
-    try:
-        with open("inventory.txt", "w") as file:
-            file.write(item_number, item_name, item_quantity)
-    except:
-        print("Error: Unable to save inventory data.")
+def save_inventory(listed_inventory):
+    with open("inventory.txt", "w") as file:
+        for every_item in listed_inventory:
+            file.write(str(every_item) + "\n")
 
 
 def get_valid_input():
@@ -58,6 +49,10 @@ def generate_report(inventory, error):
     print("Number of Failed Entries: ", error)
 
 
+inventory = load_inventory()
+error = 0
+# stock is the new stock quantity input by the user
+# inventory is now a list, NOT an integer
 
 while True:
     stock = get_valid_input()
