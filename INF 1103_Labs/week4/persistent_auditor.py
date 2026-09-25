@@ -5,14 +5,26 @@ error = 0
 
 
 def load_inventory():
+    inventory_list = []
     try:
-        open("inventory.txt", "a").close()
         with open("inventory.txt", "r") as file:
-            data = file.read()
-            print(data)
-    
+            for every_item in file:
+                inventory_list.append(int(every_item.strip()))
+            inventory = sum(inventory_list)
+            print(inventory)
+            return inventory
+            
+    except FileNotFoundError:
+        print("Error: Unable to load inventory data, file not found.")
+        return []
+
+
+def save_inventory(item_number, item_name, item_quantity):
+    try:
+        with open("inventory.txt", "w") as file:
+            file.write(item_number, item_name, item_quantity)
     except:
-        print("Error: Unable to load inventory data.")
+        print("Error: Unable to save inventory data.")
 
 
 def get_valid_input():
