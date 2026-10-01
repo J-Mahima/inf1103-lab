@@ -34,10 +34,9 @@ def get_valid_input():
     else:
         return int(stock)
     
-
 def process_delivery(inventory, stock):
-    inventory += stock
-    return inventory
+    inventory.append(stock)
+    return sum(inventory)
 # Essentially, helps to keep track of the total units processed in the inventory
 
 
@@ -59,7 +58,8 @@ error = 0
 while True:
     stock = get_valid_input()
     if stock == "quit":
-        generate_report(inventory, error)
+        save_inventory(inventory)
+        generate_report(sum(inventory), error)
         break
 
     if stock is None:
