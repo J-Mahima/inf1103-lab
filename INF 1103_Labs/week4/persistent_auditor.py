@@ -16,7 +16,7 @@ def load_inventory():
 def save_inventory(listed_inventory):
     with open("inventory.txt", "w") as file:
         for every_item in listed_inventory:
-            file.write(str(every_item) + "\n")
+            file.write(item[0] + "" + "\n")
         #This adds a new line after each item in the inventory list when saving to the file
         #ensuring that each item is on a separate line in the text file.
 
@@ -44,9 +44,9 @@ def current_order_list(inventory_items):
 
 def process_delivery(current_total, new_value): #(a, b)
     current_total.append(new_value)
-    inventory = sum(current_total)
-    #inventory += new_value
-    return inventory
+    inventoryQuantity = sum(current_total)
+    return inventoryQuantity
+# inventory += new_value
 # Essentially, helps to keep track of the total units processed in the inventory
 
 def calculate_tax(stock):
@@ -59,7 +59,7 @@ def generate_report(inventory, error):
     print("Number of Failed Entries: ", error)
     current_order_list(inventory)
 
-
+inventoryQuantity = 0
 inventory = load_inventory()
 error = 0
 # stock is the new stock quantity input by the user
@@ -79,10 +79,9 @@ while True:
         continue
 
     else:
-        print(inventory)
-        process_delivery(inventory, stock)
+        inventoryQuantity = process_delivery(inventory, stock)
         print("Amount of Tax for this delivery: $", calculate_tax(stock))
-        if inventory > 500:
+        if inventoryQuantity > 500:
             print("Alert! Stock input exceeds maximum inventory capacity of 500 units.")
             generate_report(inventory, error)
             break
