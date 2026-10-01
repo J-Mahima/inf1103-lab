@@ -4,41 +4,50 @@ def load_inventory():
         with open("inventory.txt", "r") as file:
             for every_item in file:
                 inventory_list.append(int(every_item.strip()))
-#xxx.strip() removes any whitespace characters from the beginning and end of the string, including newline characters.
+                #xxx.strip() removes any whitespace characters from the beginning and end of the string, including newline characters.
             print("Current Inventory:", inventory_list)
             return inventory_list
             
     except FileNotFoundError:
-        print("Error: Unable to load inventory data, file not found.")
+        # intended to handle the case where the inventory file does not exist yet
         return []
+    #Eg: int("apple") results in code error.
 
 def save_inventory(listed_inventory):
     with open("inventory.txt", "w") as file:
         for every_item in listed_inventory:
             file.write(str(every_item) + "\n")
-#This adds a new line after each item in the inventory list when saving to the file
-#ensuring that each item is on a separate line in the text file.
+        #This adds a new line after each item in the inventory list when saving to the file
+        #ensuring that each item is on a separate line in the text file.
 
 def get_valid_input():
-    
-    stock = input("Enter a stock quantity: ")
 
-    if stock.lower() == "quit":
+    item_name = input("Enter product name: ")
+    item_quantity = input("Enter product quantity: ")
+
+    if item_name.lower() == "quit":
         return "quit"
 
-    if not stock.isdigit() or int(stock) <= 0:
+    if not item_quantity.isdigit() or int(item_quantity) <= 0:
     # For incorrect non-integer, string or '0' input
         print("Error: Please enter a valid number")
         return None
 
     else:
-        return int(stock)
-    
-def process_delivery(inventory, stock):
-    inventory.append(stock)
-    return sum(inventory)
-# Essentially, helps to keep track of the total units processed in the inventory
+        return item_name, int(item_quantity)
 
+def current_order_list(inventory_items):
+    print("\nCurrent Orders: \n")
+    for item in inventory_items:
+        print(inventory_items.index(item) + 1001, ",", item[0], ",", item[1])
+        # Output: 1001 (ID) , ProductName , Quantity
+
+def process_delivery(current_total, new_value): #(a, b)
+    current_total.append(new_value)
+    inventory = sum(current_total)
+    #inventory += new_value
+    return inventory
+# Essentially, helps to keep track of the total units processed in the inventory
 
 def calculate_tax(stock):
     tax_rate = 0.10
@@ -48,6 +57,7 @@ def calculate_tax(stock):
 def generate_report(inventory, error):
     print("Total Units Processed: ", inventory)
     print("Number of Failed Entries: ", error)
+    current_order_list(inventory)
 
 
 inventory = load_inventory()
@@ -56,10 +66,11 @@ error = 0
 # inventory is now a list, NOT an integer
 
 while True:
-    stock = get_valid_input()
-    if stock == "quit":
+    item_name, stock = get_valid_input()
+
+    if item_name == "quit":
         save_inventory(inventory)
-        generate_report(sum(inventory), error)
+        generate_report(inventory, error)
         break
 
     if stock is None:
@@ -67,8 +78,9 @@ while True:
         error += 1
         continue
 
-    else:        
-        inventory = process_delivery(inventory, stock)
+    else:
+        print(inventory)
+        process_delivery(inventory, stock)
         print("Amount of Tax for this delivery: $", calculate_tax(stock))
         if inventory > 500:
             print("Alert! Stock input exceeds maximum inventory capacity of 500 units.")
@@ -76,9 +88,3 @@ while True:
             break
         else:
             continue
-
-        
-
-
-
-        
