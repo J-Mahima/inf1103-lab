@@ -4,28 +4,30 @@ def load_inventory():
         with open("inventory.txt", "r") as file:
             for every_item in file:
                 inventory_list.append(int(every_item.strip()))
-            print(inventory)
-            return inventory
+#xxx.strip() removes any whitespace characters from the beginning and end of the string, including newline characters.
+            print("Current Inventory:", inventory_list)
+            return inventory_list
             
     except FileNotFoundError:
         print("Error: Unable to load inventory data, file not found.")
         return []
 
-
 def save_inventory(listed_inventory):
     with open("inventory.txt", "w") as file:
         for every_item in listed_inventory:
             file.write(str(every_item) + "\n")
-
+#This adds a new line after each item in the inventory list when saving to the file
+#ensuring that each item is on a separate line in the text file.
 
 def get_valid_input():
+    
     stock = input("Enter a stock quantity: ")
 
     if stock.lower() == "quit":
         return "quit"
 
     if not stock.isdigit() or int(stock) <= 0:
-    # For incorrect non-interger, string or '0' input
+    # For incorrect non-integer, string or '0' input
         print("Error: Please enter a valid number")
         return None
 
@@ -61,7 +63,7 @@ while True:
         break
 
     if stock is None:
-    # For incorrect non-interger, string or '0' input
+    # For incorrect non-integer, string or '0' input
         error += 1
         continue
 
