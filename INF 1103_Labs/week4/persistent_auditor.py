@@ -1,4 +1,5 @@
 def load_inventory():
+    global inventory_list
     inventory_list = []
     try:
         with open("inventory.txt", "r") as file:
@@ -23,10 +24,10 @@ def save_inventory(listed_inventory):
 def get_valid_input():
 
     item_name = input("Enter product name: ")
-    item_quantity = input("Enter product quantity: ")
-
     if item_name.lower() == "quit":
         return "quit"
+    
+    item_quantity = input("Enter product quantity: ")
 
     if not item_quantity.isdigit() or int(item_quantity) <= 0:
     # For incorrect non-integer, string or '0' input
@@ -43,19 +44,18 @@ def current_order_list(inventory_items):
         # Output: 1001 (ID) , ProductName , Quantity
 
 def process_delivery(current_total, new_value): #(a, b)
-    current_total.append(new_value)
-    inventoryQuantity = sum(current_total)
+    inventoryQuantity = current_total + new_value
     return inventoryQuantity
 # inventory += new_value
 # Essentially, helps to keep track of the total units processed in the inventory
 
-def calculate_tax(stock):
-    tax_rate = 0.10
-    return round(float(tax_rate * stock), 2)
+#def calculate_tax(new_value):
+    #tax_rate = 0.10
+    #return round(float(tax_rate * new_value), 2)
 
 
-def generate_report(inventory, error):
-    print("Total Units Processed: ", inventory)
+def generate_report(inventoryQuantity, error):
+    print("Total Units Processed: ", inventoryQuantity)
     print("Number of Failed Entries: ", error)
     current_order_list(inventory)
 
@@ -66,24 +66,24 @@ error = 0
 # inventory is now a list, NOT an integer
 
 while True:
-    item_name, stock = get_valid_input()
+    new_order = get_valid_input()
 
-    if item_name == "quit":
+    if new_order == "quit":
         save_inventory(inventory)
         generate_report(inventory, error)
         break
 
-    if stock is None:
+    if new_order is None:
     # For incorrect non-integer, string or '0' input
         error += 1
         continue
 
     else:
-        inventoryQuantity = process_delivery(inventory, stock)
-        print("Amount of Tax for this delivery: $", calculate_tax(stock))
+        item_name, item_quantity = new_order
+        inventoryQuantity = process_delivery(inventoryQuantity, item_quantity)
         if inventoryQuantity > 500:
             print("Alert! Stock input exceeds maximum inventory capacity of 500 units.")
-            generate_report(inventory, error)
+            generate_report(inventoryQuantity, error)
             break
         else:
             continue
