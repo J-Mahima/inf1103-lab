@@ -4,7 +4,7 @@ def load_inventory():
     try:
         with open("inventory.txt", "r") as file:
             for every_item in file:
-                inventory_list.append(int(every_item.strip()))
+                inventory_list.append(every_item.strip())
                 #xxx.strip() removes any whitespace characters from the beginning and end of the string, including newline characters.
             print("Current Inventory:", inventory_list)
             return inventory_list
@@ -17,7 +17,7 @@ def load_inventory():
 def save_inventory(listed_inventory):
     with open("inventory.txt", "w") as file:
         for every_item in listed_inventory:
-            file.write(item[0] + "" + "\n")
+            file.write(str(every_item) + "\n")
         #This adds a new line after each item in the inventory list when saving to the file
         #ensuring that each item is on a separate line in the text file.
 
@@ -38,10 +38,12 @@ def get_valid_input():
         return item_name, int(item_quantity)
 
 def current_order_list(inventory_items):
-    print("\nCurrent Orders: \n")
+    print("Current Orders: \n")
     for item in inventory_items:
-        print(inventory_items.index(item) + 1001, ",", item[0], ",", item[1])
+        #print(inventory_items.index(item) + 1001, ",", item[0], ",", item[1])
         # Output: 1001 (ID) , ProductName , Quantity
+        print(item)
+    print()
 
 def process_delivery(current_total, new_value): #(a, b)
     inventoryQuantity = current_total + new_value
@@ -70,7 +72,8 @@ while True:
 
     if new_order == "quit":
         save_inventory(inventory)
-        generate_report(inventory, error)
+        print("\nOrder successfully saved to order.txt.")
+        generate_report(inventoryQuantity, error)
         break
 
     if new_order is None:
@@ -80,7 +83,11 @@ while True:
 
     else:
         item_name, item_quantity = new_order
+        order_id = 1001 + len(inventory_list)
+        formatted_line = f"{order_id}, {item_name}, {item_quantity}"
+        inventory_list.append(formatted_line)
         inventoryQuantity = process_delivery(inventoryQuantity, item_quantity)
+        print ("\nNew Order Added: \n", new_order[0], ", ", new_order[1])
         if inventoryQuantity > 500:
             print("Alert! Stock input exceeds maximum inventory capacity of 500 units.")
             generate_report(inventoryQuantity, error)
